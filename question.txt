@@ -1,0 +1,96 @@
+------------------------------------------------------------
+SECTION 9 — Personnaliser la page Web
+------------------------------------------------------------
+Q: Différence entre montage bind et copie dans une image Docker ?
+
+Bind mount :
+- le fichier reste sur la machine hôte
+- modif visible directement dans le conteneur, sans rebuild
+- dépend du chemin local, moins portable
+- utilisé en dev
+
+Copie dans l'image (COPY) :
+- le fichier est intégré dans l'image
+- il faut rebuild l'image pour voir une modif
+- image autonome et portable
+- utilisé en prod
+
+En bref : bind = dev / itération rapide ; COPY = prod / image figée.
+
+------------------------------------------------------------
+SECTION 10 — Réseau Docker dédié
+------------------------------------------------------------
+Pourquoi le conteneur est connecté à ce réseau ?
+- grâce au bloc networks_advanced dans main.tf
+- isole le conteneur du réseau bridge par défaut
+- permet le DNS interne entre conteneurs du même réseau
+
+Intérêt de déclarer le réseau dans Terraform :
+- fait partie de l'infra décrite et versionnée
+- reproductible (même nom à chaque apply)
+- Terraform gère les dépendances (réseau créé avant conteneur)
+- supprimé proprement avec terraform destroy
+
+Vérification suppression :
+docker network ls  -> le réseau ne doit plus apparaître.
+
+------------------------------------------------------------
+SECTION 11 — Limiter l'exposition du service
+------------------------------------------------------------
+Q: Différence entre 127.0.0.1 et écoute sur toutes les interfaces ?
+
+si on reste sur le localhost (127.0.0.1) ça permets d'écouter uniquement sur la propre machine, en évitant une exposition au réseaux externe. 
+Si on laisse all interfaces, ça nous expose
+------------------------------------------------------------
+SECTION 13 — Inspecter l'état Terraform
+------------------------------------------------------------
+1) terraform state list affiche :
+   docker_image.nginx
+   docker_network.app_network
+   docker_container.web
+
+2) terraform state show affiche tous les attributs connus :
+   id, name, image, ports, networks, mounts, IP, état, etc.
+
+3) Pourquoi protéger l'état ?
+   - contient la correspondance code <-> ressources réelles
+   - peut contenir des secrets en clair
+   - sa perte/corruption = perte de contrôle sur l'infra
+
+4) Pourquoi ne pas publier l'état ?
+   - fuite de secrets (tokens, IP internes)
+   - révèle la topologie de l'infra
+   - risque d'attaque / cartographie
+
+------------------------------------------------------------
+SECTION 15 — Git
+------------------------------------------------------------
+Comment Git aide :
+
+Git aide a versionné son code, a faire un retour en arrière si il y a une erreur dans un commit. De pouvoir travailler en parralèle a plusieurs
+
+
+Exercice 1 — Modifier le nom
+- Terraform propose de REMPLACER le conteneur (nom = immuable)
+- le réseau est aussi recréé (son nom dépend de container_name)
+
+
+-----------------------------------------------------------
+SECTION 20 — Questions de compréhension
+------------------------------------------------------------
+1) init / plan / apply :
+   - init : initialise le projet, télécharge les providers
+   - plan : calcule et affiche les changements sans les appliquer
+   - apply : exécute les changements après confirmation
+
+2) Provider Terraform :
+
+   plugin qui link Terraform à une API externe (Docker, AWS...)
+
+3) terraform.tfstate :
+   stocke la correspondance code <-> ressources réelles
+   sert à calculer les plans et détecter les dérives.
+
+4) Variables / outputs :
+   - variables : paramétrer sans réécrire le code
+   - outputs : exposer des infos utiles après déploiement
