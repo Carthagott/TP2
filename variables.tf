@@ -9,6 +9,18 @@ variable "container_name" {
   }
 }
 
+
+variable "container_name_custom"{
+    description="Nom custom du conteneur Web"
+    type=string
+    default="nom-custom-parfait"
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9][a-zA-Z0-9_.-]*$", var.container_name_custom))
+    error_message = "Le nom du conteneur contient des caractères non autorisés."
+  }
+
+}
+
 variable "external_port" {
   description = "Port HTTP exposé sur la machine locale"
   type        = number

@@ -69,11 +69,12 @@ Comment Git aide :
 
 Git aide a versionné son code, a faire un retour en arrière si il y a une erreur dans un commit. De pouvoir travailler en parralèle a plusieurs
 
-
+------------------------------------------------------------
+SECTION 19 - EXERCICE COMPLEMENTAIRE
+------------------------------------------------------------
 Exercice 1 — Modifier le nom
 - Terraform propose de REMPLACER le conteneur (nom = immuable)
 - le réseau est aussi recréé (son nom dépend de container_name)
-
 
 -----------------------------------------------------------
 SECTION 20 — Questions de compréhension
@@ -94,3 +95,23 @@ SECTION 20 — Questions de compréhension
 4) Variables / outputs :
    - variables : paramétrer sans réécrire le code
    - outputs : exposer des infos utiles après déploiement
+
+5)dérive de configuration
+   différence entre état attendu et réalité de l'infra et c'est détectée par terraform plan.
+
+6)différence iac/manuel
+   - IaC : versionné, reproductible, automatisable, auditable
+   - manuel : non reproductible, erreurs humaines, difficile à auditer
+
+7) Git dans un projet IaC :
+   versionner, tracer, collaborer, revenir en arrière
+
+8) Différence CI/CD : 
+   - CI : vérifie la qualité du code que l'on produit 
+   - CD : applique automatiquement en environnement cible
+
+9) Examiner Plan avant Apply: 
+    Pour être sur des modifications que l'on créer dans l'infra
+
+10) Précautions secrets: 
+    De ne pas les leak / perdre accès pour ne pas compromettre l'archi

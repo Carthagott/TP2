@@ -17,11 +17,11 @@ resource "docker_image" "nginx" {
 }
 
 resource "docker_network" "app_network" {
-  name = "${var.container_name}-network"
+  name = "${var.container_name_custom}-network"
 }
 
 resource "docker_container" "web" {
-  name  = var.container_name
+  name  = var.container_name_custom
   image = docker_image.nginx.image_id
 
   ports {
